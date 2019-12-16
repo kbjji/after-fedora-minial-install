@@ -1,3 +1,4 @@
 # Extra install Script after Fedora minimal install
 ---
-Fedora OS extra Install Script
+- extra_pkg.sh : Fedora OS extra Install Script
+- flatpak_app.sh : flatpak app's bin command linker
