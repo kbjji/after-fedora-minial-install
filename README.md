@@ -1,3 +1,3 @@
 # Extra install Script after Fedora minimal install
 ---
-FEdora OS extra Install Script
+Fedora OS extra Install Script
