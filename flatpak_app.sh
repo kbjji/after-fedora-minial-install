@@ -23,7 +23,7 @@ then
 		APP_NAME=$1
 		if [[ z${APP_NAME} == "z" ]]
 		then
-			echo "USE: flatpak_app [Application ID] || update"
+			echo "USE: flatpak_app.sh [Application ID] || update"
 			exit 0
 		fi
 	fi
