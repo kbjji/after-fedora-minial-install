@@ -13,7 +13,8 @@ then
 		do
 			/usr/bin/unlink ${UNLINK_EXE}
 		done
-		FLATPAK_APP_LIST=`/usr/bin/flatpak list --app --columns=application | /usr/bin/grep -v 'Application ID' | /usr/bin/awk -F '.' '{ if ( $NF == "Client" || $NF == "Application" ) print $(NF-1); else print $NF; }' | /usr/bin/tr "[A-Z]" "[a-z]"`
+		FLATPAK_APP_LIST=`/usr/bin/flatpak list --app --columns=application | /usr/bin/grep -v 'Application ID' | \
+			/usr/bin/awk -F '.' '{ if ( $NF == "Client" || $NF == "Application" || $NF == "Studio" ) print $(NF-1); else print $NF; }' | /usr/bin/tr "[A-Z]" "[a-z]"`
 		for APP in ${FLATPAK_APP_LIST}
 		do
 			/usr/bin/ln -s `whereis flatpak_app.sh | awk '{print $2}'` ${APP}
