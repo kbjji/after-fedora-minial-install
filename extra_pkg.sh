@@ -14,13 +14,13 @@ function for_fedora_silverblue() {
 		else
 			${CMD} install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-rawhide.noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-rawhide.noarch.rpm
 		fi
-    echo ""
-    echo "Please Reboot and re-run this script!"
-    echo ""
+    		echo ""
+    		echo "Please Reboot and re-run this script!"
+   		echo ""
 	else
-	  ${CMD} install ffmpeg ffmpeg-libs fuse-exfat gnome-tweaks p7zip unrar xorg-x11-drv-amdgpu xorg-x11-fonts-misc zsh
-	  echo ""
-  fi
+	  	${CMD} install ffmpeg ffmpeg-libs fuse-exfat gnome-tweaks p7zip unrar xorg-x11-drv-amdgpu xorg-x11-fonts-misc zsh
+	  	echo ""
+  	fi
 }
 
 function for_fedora_release() {
