@@ -2,3 +2,5 @@
 ---
 - extra_pkg.sh : Fedora OS extra Install Script
 - flatpak_app.sh : flatpak app's bin command linker
+- pass.sh : ffpass command helper
+            -> https://github.com/louisabraham/ffpass
