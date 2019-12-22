@@ -99,7 +99,8 @@ then
 	curl -s ifconfig.me > ${TEMP_FILE}
 fi
 
-TRAY_IP="📶 `cat ${TEMP_FILE}`"
+TRAY_IP="network offline"
+[[ z`cat ${TEMP_FILE}` != "z" ]] && TRAY_IP="📶 `cat ${TEMP_FILE}`"
 
 # ===
 SINK_DEVICE="hdmi-stereo-extra3"
