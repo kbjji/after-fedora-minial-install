@@ -95,7 +95,7 @@ TEMP_FILE="${CACHE_DIR}/sway-tray-rip-`date +'%y%m%d'`"
 
 if [[ ! -f ${TEMP_FILE} ]]
 then
-	rm -rf ${CACHE_DIR}/sway_tray_rip-*
+	rm -rf ${CACHE_DIR}/sway-tray-rip-*
 	curl -s ifconfig.me > ${TEMP_FILE}
 fi
 
