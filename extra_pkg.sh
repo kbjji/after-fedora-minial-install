@@ -197,7 +197,7 @@ function for_fedora_release() {
 	       firewall-config \
 	       PackageKit-gstreamer-plugin \
 	       PackageKit-command-not-found \
-         zsh \
+               zsh \
 	       wireless-tools \
 	       net-tools \
 	       drpm \
@@ -212,6 +212,9 @@ function for_fedora_release() {
 	       autofs \
 	       gtk2-immodule-xim \
 	       gtk3-immodule-xim \
+	       gtk-murrine-engine \
+	       gtk2-engines \
+	       qt5-qtstyleplugins \
 	       ibus-hangul \
 	       vim
 	echo ""
