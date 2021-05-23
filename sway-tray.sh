@@ -9,13 +9,13 @@ TEMP_FILE="${CACHE_DIR}/sway-tray-osver-`date +'%y%m%d'`"
 if [[ ! -f ${TEMP_FILE} ]]
 then
 	rm -rf ${CACHE_DIR}/sway-tray-osver-*
-	hostnamectl status | grep 'Operating System' | awk -F ': ' '{print $2}' > ${TEMP_FILE}
+	hostnamectl status | grep 'Operating System' | awk '{print $3" "$4}' > ${TEMP_FILE}
 fi
 
 TRAY_OSVER=`cat ${TEMP_FILE}`
 
 # ===
-LOAD_USE=`cat /proc/loadavg | awk '{print ($1/4)*100}' | cut -d '.' -f1`
+LOAD_USE=`top -n1 -b -p 1 | grep Cpu | awk '{print 100-$8}' | cut -d '.' -f1`
 LOAD_STRING=`printf '[%3d%s]' ${LOAD_USE} '%'`
 
 TRAY_LOAD="${LOAD_STRING} 🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴"
@@ -91,22 +91,19 @@ MEM_INACTIVE_USE=`echo "${TOTAL_MEM_USE}-${MEM_ACTIVE_USE}" | bc`
 TRAY_MEM="${AVICE_GAUGE}${INAVICE_GAUGE}${FREE_GAUGE}"
 
 # ===
-TEMP_FILE="${CACHE_DIR}/sway-tray-rip-`date +'%y%m%d'`"
+CHEKC_NET_CONNECT=`LANG=C nmcli -o | grep connected`
+TRAY_NET="⚠️  Internet Not Connect"
 
-if [[ ! -f ${TEMP_FILE} ]]
+if [[ `echo ${CHEKC_NET_CONNECT} | wc -l` -ne 0 ]]
 then
-	rm -rf ${CACHE_DIR}/sway-tray-rip-*
-	curl -s ifconfig.me > ${TEMP_FILE}
+	TRAY_NET=`echo ${CHEKC_NET_CONNECT} | awk '{ if ( $1 == "wlo1:" ) { print "📶 "$4 } else { print "☑️ "$4 } }'`
 fi
 
-TRAY_IP="network offline"
-[[ z`cat ${TEMP_FILE}` != "z" ]] && TRAY_IP="📶 `cat ${TEMP_FILE}`"
-
 # ===
-SINK_DEVICE="hdmi-stereo-extra3"
-BASE_VOLUME=`pactl list sinks | grep -A 10 ${SINK_DEVICE} | grep "Volume:" | head -n 1 | awk -F '/ ' '{print $2}'`
+SINK_NAME="alsa_output.pci-0000_00_1b.0.analog-stereo"
+BASE_VOLUME=`pactl list sinks | grep -A 10 ${SINK_NAME} | grep "Volume:" | head -n 1 | awk -F '/ ' '{print $2}'`
 CURRENT_VOL=`echo ${BASE_VOLUME} | tr -d '%'`
-MUTE_INFO=`pactl list sinks | grep -A 10 ${SINK_DEVICE} | grep "Mute:" | awk '{print $2}'`
+MUTE_INFO=`pactl list sinks | grep -A 10 ${SINK_NAME} | grep "Mute:" | awk '{print $2}'`
 
 if [[ ${MUTE_INFO} == "yes" ]]
 then
@@ -114,23 +111,44 @@ then
 else	
 	if [[ ${CURRENT_VOL} -le 0 ]]
 	then
-		TRAY_VOLUME="🔈   0%"
+		TRAY_VOLUME="🔈  0%"
 	elif [[ ${CURRENT_VOL} -le 10 ]]
 	then
-		TRAY_VOLUME="🔈   ${BASE_VOLUME}"
+		TRAY_VOLUME="🔈  ${BASE_VOLUME}"
 	elif [[ ${CURRENT_VOL} -ge 11 ]] && [[ ${CURRENT_VOL} -le 80 ]]
 	then
-		TRAY_VOLUME="🔉  ${BASE_VOLUME}"
+		TRAY_VOLUME="🔉 ${BASE_VOLUME}"
 	elif [[ ${CURRENT_VOL} -ge 81 ]] && [[ ${CURRENT_VOL} -le 100 ]]
 	then
-		TRAY_VOLUME="🔊  ${BASE_VOLUME}"
+		TRAY_VOLUME="🔊 ${BASE_VOLUME}"
 	else
-		TRAY_VOLUME="🔊 100%"
+		TRAY_VOLUME="🔊100%"
 	fi
 fi
 
 # ===
-TRAY_TIME=`date +'%Y-%m-%d(%a) %l:%M %p'`
+TEMP_FILE="${CACHE_DIR}/sway-tray-weather-`date +'%y%m%d'`"
+TRAY_WEATHER="⚠️  Unknown Weather Info"
+
+if [[ ! -f ${TEMP_FILE} ]]
+then
+	rm -rf ${CACHE_DIR}/sway-tray-weather-*
+	[[ `echo ${TRAY_NET} | grep 'Not Connect' | wc -l` -ne 0 ]] && curl wttr.in/busan?format=3 > ${TEMP_FILE}
+else
+	if [[ `date +'%H%M%S'` == "000000" ]] || [[ `date +'%H%M%S'` == "060000" ]] || [[ `date +'%H%M%S'` == "120000" ]] || [[ `date +'%H%M%S'` == "180000" ]]
+	then
+		[[ `echo ${TRAY_NET} | grep 'Not Connect' | wc -l` -ne 0 ]] && curl wttr.in/busan?format=3 > ${TEMP_FILE}
+	fi
+fi
+
+TRAY_WEATHER=`cat ${TEMP_FILE}`
+
+# ===
+#TRAY_TIME=`date +'%Y-%m-%d(%a) %H:%M'`
+TRAY_TIME=`date +'%H:%M'`
+
+# ===
+USER_NAME='⠁⠕⠢⠃⠎⠑⠨⠍⠒'
 
 ### Print tray message
-echo "${TRAY_OSVER} │ ${TRAY_LOAD} │ ${TRAY_MEM} │ ${TRAY_IP} │ ${TRAY_VOLUME} │ ${TRAY_TIME}"
+echo "${TRAY_OSVER}│${TRAY_LOAD}│${TRAY_MEM}|${TRAY_NET}│${TRAY_VOLUME}│${TRAY_WEATHER}│${TRAY_TIME}│${USER_NAME}│"
