@@ -15,31 +15,30 @@ fi
 TRAY_OSVER=`cat ${TEMP_FILE}`
 
 # ===
-LOAD_USE=`top -n1 -b -p 1 | grep Cpu | awk '{print 100-$8}' | cut -d '.' -f1`
-LOAD_STRING=`printf '[%3d%s]' ${LOAD_USE} '%'`
+LOAD_USE=`cat /proc/stat | egrep '^cpu ' | awk '{ print 1000-($5/($2+$3+$4+$5+$6+$7+$8))*1000 }' | awk -F '.' '{print $1}'`
+TRAY_LOAD="🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴"
 
-TRAY_LOAD="${LOAD_STRING} 🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴"
-[[ ${LOAD_USE} -eq 0 ]]                               && TRAY_LOAD="${LOAD_STRING} ⚪⚪⚪⚪⚪⚪⚪⚪⚪⚪"
-[[ ${LOAD_USE} -ge 1 ]]  && [[ ${LOAD_USE} -le 5 ]]   && TRAY_LOAD="${LOAD_STRING} 🟡⚪⚪⚪⚪⚪⚪⚪⚪⚪"
-[[ ${LOAD_USE} -ge 6 ]]  && [[ ${LOAD_USE} -le 10 ]]  && TRAY_LOAD="${LOAD_STRING} 🟠⚪⚪⚪⚪⚪⚪⚪⚪⚪"
-[[ ${LOAD_USE} -ge 11 ]] && [[ ${LOAD_USE} -le 15 ]]  && TRAY_LOAD="${LOAD_STRING} 🟠🟡⚪⚪⚪⚪⚪⚪⚪⚪"
-[[ ${LOAD_USE} -ge 16 ]] && [[ ${LOAD_USE} -le 20 ]]  && TRAY_LOAD="${LOAD_STRING} 🔴🟠⚪⚪⚪⚪⚪⚪⚪⚪"
-[[ ${LOAD_USE} -ge 21 ]] && [[ ${LOAD_USE} -le 25 ]]  && TRAY_LOAD="${LOAD_STRING} 🔴🟠🟡⚪⚪⚪⚪⚪⚪⚪"
-[[ ${LOAD_USE} -ge 26 ]] && [[ ${LOAD_USE} -le 30 ]]  && TRAY_LOAD="${LOAD_STRING} 🔴🔴🟠⚪⚪⚪⚪⚪⚪⚪"
-[[ ${LOAD_USE} -ge 31 ]] && [[ ${LOAD_USE} -le 35 ]]  && TRAY_LOAD="${LOAD_STRING} 🔴🔴🟠🟡⚪⚪⚪⚪⚪⚪"
-[[ ${LOAD_USE} -ge 36 ]] && [[ ${LOAD_USE} -le 40 ]]  && TRAY_LOAD="${LOAD_STRING} 🔴🔴🔴🟠⚪⚪⚪⚪⚪⚪"
-[[ ${LOAD_USE} -ge 41 ]] && [[ ${LOAD_USE} -le 45 ]]  && TRAY_LOAD="${LOAD_STRING} 🔴🔴🔴🟠🟡⚪⚪⚪⚪⚪"
-[[ ${LOAD_USE} -ge 46 ]] && [[ ${LOAD_USE} -le 50 ]]  && TRAY_LOAD="${LOAD_STRING} 🔴🔴🔴🔴🟠⚪⚪⚪⚪⚪"
-[[ ${LOAD_USE} -ge 51 ]] && [[ ${LOAD_USE} -le 55 ]]  && TRAY_LOAD="${LOAD_STRING} 🔴🔴🔴🔴🟠🟡⚪⚪⚪⚪"
-[[ ${LOAD_USE} -ge 56 ]] && [[ ${LOAD_USE} -le 60 ]]  && TRAY_LOAD="${LOAD_STRING} 🔴🔴🔴🔴🔴🟠⚪⚪⚪⚪"
-[[ ${LOAD_USE} -ge 61 ]] && [[ ${LOAD_USE} -le 65 ]]  && TRAY_LOAD="${LOAD_STRING} 🔴🔴🔴🔴🔴🟠🟡⚪⚪⚪"
-[[ ${LOAD_USE} -ge 66 ]] && [[ ${LOAD_USE} -le 70 ]]  && TRAY_LOAD="${LOAD_STRING} 🔴🔴🔴🔴🔴🔴🟠⚪⚪⚪"
-[[ ${LOAD_USE} -ge 71 ]] && [[ ${LOAD_USE} -le 75 ]]  && TRAY_LOAD="${LOAD_STRING} 🔴🔴🔴🔴🔴🔴🟠🟡⚪⚪"
-[[ ${LOAD_USE} -ge 76 ]] && [[ ${LOAD_USE} -le 80 ]]  && TRAY_LOAD="${LOAD_STRING} 🔴🔴🔴🔴🔴🔴🔴🟠⚪⚪"
-[[ ${LOAD_USE} -ge 81 ]] && [[ ${LOAD_USE} -le 85 ]]  && TRAY_LOAD="${LOAD_STRING} 🔴🔴🔴🔴🔴🔴🔴🟠🟡⚪"
-[[ ${LOAD_USE} -ge 86 ]] && [[ ${LOAD_USE} -le 90 ]]  && TRAY_LOAD="${LOAD_STRING} 🔴🔴🔴🔴🔴🔴🔴🔴🟠⚪"
-[[ ${LOAD_USE} -ge 91 ]] && [[ ${LOAD_USE} -le 95 ]]  && TRAY_LOAD="${LOAD_STRING} 🔴🔴🔴🔴🔴🔴🔴🔴🟠🟡"
-[[ ${LOAD_USE} -ge 96 ]] && [[ ${LOAD_USE} -le 100 ]] && TRAY_LOAD="${LOAD_STRING} 🔴🔴🔴🔴🔴🔴🔴🔴🔴🟠"
+[[ ${LOAD_USE} -eq 0 ]]                                 && TRAY_LOAD="⚪⚪⚪⚪⚪⚪⚪⚪⚪⚪"
+[[ ${LOAD_USE} -ge 1 ]]   && [[ ${LOAD_USE} -le 50 ]]   && TRAY_LOAD="🟡⚪⚪⚪⚪⚪⚪⚪⚪⚪"
+[[ ${LOAD_USE} -ge 51 ]]  && [[ ${LOAD_USE} -le 100 ]]  && TRAY_LOAD="🟠⚪⚪⚪⚪⚪⚪⚪⚪⚪"
+[[ ${LOAD_USE} -ge 101 ]] && [[ ${LOAD_USE} -le 150 ]]  && TRAY_LOAD="🟠🟡⚪⚪⚪⚪⚪⚪⚪⚪"
+[[ ${LOAD_USE} -ge 151 ]] && [[ ${LOAD_USE} -le 200 ]]  && TRAY_LOAD="🔴🟠⚪⚪⚪⚪⚪⚪⚪⚪"
+[[ ${LOAD_USE} -ge 201 ]] && [[ ${LOAD_USE} -le 250 ]]  && TRAY_LOAD="🔴🟠🟡⚪⚪⚪⚪⚪⚪⚪"
+[[ ${LOAD_USE} -ge 251 ]] && [[ ${LOAD_USE} -le 300 ]]  && TRAY_LOAD="🔴🔴🟠⚪⚪⚪⚪⚪⚪⚪"
+[[ ${LOAD_USE} -ge 301 ]] && [[ ${LOAD_USE} -le 350 ]]  && TRAY_LOAD="🔴🔴🟠🟡⚪⚪⚪⚪⚪⚪"
+[[ ${LOAD_USE} -ge 351 ]] && [[ ${LOAD_USE} -le 400 ]]  && TRAY_LOAD="🔴🔴🔴🟠⚪⚪⚪⚪⚪⚪"
+[[ ${LOAD_USE} -ge 401 ]] && [[ ${LOAD_USE} -le 450 ]]  && TRAY_LOAD="🔴🔴🔴🟠🟡⚪⚪⚪⚪⚪"
+[[ ${LOAD_USE} -ge 451 ]] && [[ ${LOAD_USE} -le 500 ]]  && TRAY_LOAD="🔴🔴🔴🔴🟠⚪⚪⚪⚪⚪"
+[[ ${LOAD_USE} -ge 501 ]] && [[ ${LOAD_USE} -le 550 ]]  && TRAY_LOAD="🔴🔴🔴🔴🟠🟡⚪⚪⚪⚪"
+[[ ${LOAD_USE} -ge 551 ]] && [[ ${LOAD_USE} -le 600 ]]  && TRAY_LOAD="🔴🔴🔴🔴🔴🟠⚪⚪⚪⚪"
+[[ ${LOAD_USE} -ge 601 ]] && [[ ${LOAD_USE} -le 650 ]]  && TRAY_LOAD="🔴🔴🔴🔴🔴🟠🟡⚪⚪⚪"
+[[ ${LOAD_USE} -ge 651 ]] && [[ ${LOAD_USE} -le 700 ]]  && TRAY_LOAD="🔴🔴🔴🔴🔴🔴🟠⚪⚪⚪"
+[[ ${LOAD_USE} -ge 701 ]] && [[ ${LOAD_USE} -le 750 ]]  && TRAY_LOAD="🔴🔴🔴🔴🔴🔴🟠🟡⚪⚪"
+[[ ${LOAD_USE} -ge 751 ]] && [[ ${LOAD_USE} -le 800 ]]  && TRAY_LOAD="🔴🔴🔴🔴🔴🔴🔴🟠⚪⚪"
+[[ ${LOAD_USE} -ge 801 ]] && [[ ${LOAD_USE} -le 850 ]]  && TRAY_LOAD="🔴🔴🔴🔴🔴🔴🔴🟠🟡⚪"
+[[ ${LOAD_USE} -ge 851 ]] && [[ ${LOAD_USE} -le 900 ]]  && TRAY_LOAD="🔴🔴🔴🔴🔴🔴🔴🔴🟠⚪"
+[[ ${LOAD_USE} -ge 901 ]] && [[ ${LOAD_USE} -le 950 ]]  && TRAY_LOAD="🔴🔴🔴🔴🔴🔴🔴🔴🟠🟡"
+[[ ${LOAD_USE} -ge 951 ]] && [[ ${LOAD_USE} -le 1000 ]] && TRAY_LOAD="🔴🔴🔴🔴🔴🔴🔴🔴🔴🟠"
 
 # ===
 
@@ -91,16 +90,17 @@ MEM_INACTIVE_USE=`echo "${TOTAL_MEM_USE}-${MEM_ACTIVE_USE}" | bc`
 TRAY_MEM="${AVICE_GAUGE}${INAVICE_GAUGE}${FREE_GAUGE}"
 
 # ===
-CHEKC_NET_CONNECT=`LANG=C nmcli -o | grep connected`
-TRAY_NET="⚠️  Internet Not Connect"
+CHECK_NET_CONNECT=`LANG=C nmcli -o | grep " connected"`
 
-if [[ `echo ${CHEKC_NET_CONNECT} | wc -l` -ne 0 ]]
+if [[ `echo ${CHECK_NET_CONNECT} | wc -w` -ne 0 ]]
 then
-	TRAY_NET=`echo ${CHEKC_NET_CONNECT} | awk '{ if ( $1 == "wlo1:" ) { print "📶 "$4 } else { print "☑️ "$4 } }'`
+	TRAY_NET=`echo ${CHECK_NET_CONNECT} | awk '{ if ( $1 == "wlo1:" ) { print "📶 "$4 } else { print "☑️ "$4 } }'`
+else
+	TRAY_NET="⚠️  offline"
 fi
 
 # ===
-SINK_NAME="alsa_output.pci-0000_00_1b.0.analog-stereo"
+SINK_NAME="PipeWire"
 BASE_VOLUME=`pactl list sinks | grep -A 10 ${SINK_NAME} | grep "Volume:" | head -n 1 | awk -F '/ ' '{print $2}'`
 CURRENT_VOL=`echo ${BASE_VOLUME} | tr -d '%'`
 MUTE_INFO=`pactl list sinks | grep -A 10 ${SINK_NAME} | grep "Mute:" | awk '{print $2}'`
@@ -127,28 +127,32 @@ else
 fi
 
 # ===
-TEMP_FILE="${CACHE_DIR}/sway-tray-weather-`date +'%y%m%d'`"
-TRAY_WEATHER="⚠️  Unknown Weather Info"
+TEMP_FILE="${CACHE_DIR}/i3-tray-weather-`date +'%y%m%d%H'`"
 
 if [[ ! -f ${TEMP_FILE} ]]
 then
 	rm -rf ${CACHE_DIR}/sway-tray-weather-*
-	[[ `echo ${TRAY_NET} | grep 'Not Connect' | wc -l` -ne 0 ]] && curl wttr.in/busan?format=3 > ${TEMP_FILE}
+	[[ ${TRAY_NET} != "offline" ]] && curl wttr.in/busan?format=3 > ${TEMP_FILE}
 else
-	if [[ `date +'%H%M%S'` == "000000" ]] || [[ `date +'%H%M%S'` == "060000" ]] || [[ `date +'%H%M%S'` == "120000" ]] || [[ `date +'%H%M%S'` == "180000" ]]
+	if [[ `date +'%M%S'` == "0000" ]]
 	then
-		[[ `echo ${TRAY_NET} | grep 'Not Connect' | wc -l` -ne 0 ]] && curl wttr.in/busan?format=3 > ${TEMP_FILE}
+		[[ ${TRAY_NET} != "offline" ]] && curl wttr.in/busan?format=3 > ${TEMP_FILE}
 	fi
 fi
 
-TRAY_WEATHER=`cat ${TEMP_FILE}`
+if [[ `cat ${TEMP_FILE} | wc -l` -ne 0 ]]
+then
+	TRAY_WEATHER=`cat ${TEMP_FILE}`
+else
+	TRAY_WEATHER="🌏 --"
+fi
 
 # ===
 #TRAY_TIME=`date +'%Y-%m-%d(%a) %H:%M'`
-TRAY_TIME=`date +'%H:%M'`
+TRAY_TIME=`date +'%m/%d(%a) %H:%M'`
 
 # ===
-USER_NAME='⠁⠕⠢⠃⠎⠑⠨⠍⠒'
+USER_NAME=`cat /etc/passwd | grep ${USER} | awk -F ':' '{print $5}'`
 
 ### Print tray message
 echo "${TRAY_OSVER}│${TRAY_LOAD}│${TRAY_MEM}|${TRAY_NET}│${TRAY_VOLUME}│${TRAY_WEATHER}│${TRAY_TIME}│${USER_NAME}│"
